@@ -1,0 +1,89 @@
+[gd_scene load_steps=13 format=3 uid="uid://cn5lom66jx11w"]
+
+[ext_resource type="Texture2D" uid="uid://ch2el3nanfy5q" path="res://Assets/0x72_16x16DungeonTileset.v5/0x72_16x16DungeonTileset.v5.png" id="1_2i58y"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q0rl6"]
+atlas = ExtResource("1_2i58y")
+region = Rect2(128, 152, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lmgny"]
+atlas = ExtResource("1_2i58y")
+region = Rect2(144, 152, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s8ihg"]
+atlas = ExtResource("1_2i58y")
+region = Rect2(160, 152, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k2tnc"]
+atlas = ExtResource("1_2i58y")
+region = Rect2(176, 152, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x5c0e"]
+atlas = ExtResource("1_2i58y")
+region = Rect2(192, 152, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ja4ut"]
+atlas = ExtResource("1_2i58y")
+region = Rect2(208, 152, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mgtoh"]
+atlas = ExtResource("1_2i58y")
+region = Rect2(224, 152, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nn3s2"]
+atlas = ExtResource("1_2i58y")
+region = Rect2(240, 152, 16, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a7kyu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q0rl6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lmgny")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s8ihg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k2tnc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x5c0e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ja4ut")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mgtoh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nn3s2")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 10.0
+}]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2i58y"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2i58y"]
+size = Vector2(10, 18)
+
+[node name="Torch" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(1.19209e-07, -13)
+scale = Vector2(1.25, 1.25)
+sprite_frames = SubResource("SpriteFrames_a7kyu")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.753089
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+physics_material_override = SubResource("PhysicsMaterial_2i58y")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, -9)
+shape = SubResource("RectangleShape2D_2i58y")

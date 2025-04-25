@@ -1,0 +1,57 @@
+[gd_scene load_steps=10 format=3 uid="uid://dl5e4hx1sy4tx"]
+
+[ext_resource type="Script" uid="uid://d0lu78f7pwr2n" path="res://Level/level.gd" id="1_qmtf6"]
+[ext_resource type="PackedScene" uid="uid://dff0y0oein4a1" path="res://Box/box.tscn" id="2_d6qko"]
+[ext_resource type="TileSet" uid="uid://dq3owu8rghayv" path="res://resoursec/level.tres" id="2_nk1il"]
+[ext_resource type="PackedScene" uid="uid://deiq7xy1437hu" path="res://Knight/knight.tscn" id="3_uawph"]
+[ext_resource type="Texture2D" uid="uid://2nhvhx14v5dn" path="res://Assets/background/background_layer_1.png" id="4_nk1il"]
+[ext_resource type="Script" uid="uid://b1v7owonihkb5" path="res://Level/generated_map.gd" id="4_wqlfs"]
+[ext_resource type="Texture2D" uid="uid://bfkci7jhhnfuw" path="res://Assets/background/background_layer_2.png" id="5_d6qko"]
+[ext_resource type="Texture2D" uid="uid://d4dx68qki11p1" path="res://Assets/background/background_layer_3.png" id="6_22cqp"]
+[ext_resource type="Script" uid="uid://c134lb6agg0j4" path="res://Level/camera_2d.gd" id="9_wqlfs"]
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_qmtf6")
+box_scene = ExtResource("2_d6qko")
+
+[node name="GeneratedMap" type="TileMapLayer" parent="." groups=["GeneratedMap"]]
+tile_set = ExtResource("2_nk1il")
+script = ExtResource("4_wqlfs")
+
+[node name="Background" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="Background"]
+motion_scale = Vector2(0.2, 1)
+motion_mirroring = Vector2(1150, 651)
+
+[node name="BackgroundLayer1" type="Sprite2D" parent="Background/ParallaxLayer"]
+position = Vector2(577.778, 326)
+scale = Vector2(3.61111, 3.61111)
+texture = ExtResource("4_nk1il")
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="Background"]
+motion_scale = Vector2(0.4, 1)
+motion_mirroring = Vector2(1150, 651)
+
+[node name="BackgroundLayer2" type="Sprite2D" parent="Background/ParallaxLayer2"]
+position = Vector2(578.889, 323.75)
+scale = Vector2(3.61389, 3.61389)
+texture = ExtResource("5_d6qko")
+
+[node name="ParallaxLayer3" type="ParallaxLayer" parent="Background"]
+motion_scale = Vector2(0.6, 1)
+motion_mirroring = Vector2(1150, 651)
+
+[node name="BackgroundLayer3" type="Sprite2D" parent="Background/ParallaxLayer3"]
+position = Vector2(577.889, 324.5)
+scale = Vector2(3.60556, 3.60556)
+texture = ExtResource("6_22cqp")
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="Knight" parent="Node2D" instance=ExtResource("3_uawph")]
+unique_name_in_owner = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(3.5, 3.5)
+script = ExtResource("9_wqlfs")

@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://f8d4tb4cof3a"]
+
+[ext_resource type="Texture2D" uid="uid://chsdk3vii2avd" path="res://Assets/0x72_16x16DungeonTileset.v5/items/weapon_sword_golden.png" id="1_2fwl4"]
+
+[node name="UI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AttackButton" type="TouchScreenButton" parent="."]
+position = Vector2(969, 504)
+rotation = -0.785398
+scale = Vector2(3.5625, 3.5625)
+texture_normal = ExtResource("1_2fwl4")
+texture_pressed = ExtResource("1_2fwl4")
+action = "attack"

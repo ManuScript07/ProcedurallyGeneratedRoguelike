@@ -1,0 +1,98 @@
+[gd_scene load_steps=13 format=3 uid="uid://bx2rl2yomaysv"]
+
+[ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/0x72_DungeonTilesetII_v1_3.png" id="1_lgqwx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_732w0"]
+atlas = ExtResource("1_lgqwx")
+region = Rect2(368, 320, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p1jud"]
+atlas = ExtResource("1_lgqwx")
+region = Rect2(384, 320, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ec8dg"]
+atlas = ExtResource("1_lgqwx")
+region = Rect2(400, 320, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qh1io"]
+atlas = ExtResource("1_lgqwx")
+region = Rect2(416, 320, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ch6dx"]
+atlas = ExtResource("1_lgqwx")
+region = Rect2(432, 320, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m01y2"]
+atlas = ExtResource("1_lgqwx")
+region = Rect2(448, 320, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3vsvn"]
+atlas = ExtResource("1_lgqwx")
+region = Rect2(464, 320, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j6ew3"]
+atlas = ExtResource("1_lgqwx")
+region = Rect2(480, 320, 16, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jq61y"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_732w0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p1jud")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ec8dg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qh1io")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ch6dx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m01y2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3vsvn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j6ew3")
+}],
+"loop": true,
+"name": &"Run",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n2jwq"]
+radius = 7.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2suwm"]
+radius = 14.0357
+
+[node name="miniDemon" type="CharacterBody2D"]
+collision_layer = 0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(1.42109e-14, -22)
+scale = Vector2(1.375, 1.375)
+sprite_frames = SubResource("SpriteFrames_jq61y")
+animation = &"Idle"
+autoplay = "Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -7)
+shape = SubResource("CircleShape2D_n2jwq")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" groups=["enemy"]]
+position = Vector2(0, -14)
+shape = SubResource("CircleShape2D_2suwm")

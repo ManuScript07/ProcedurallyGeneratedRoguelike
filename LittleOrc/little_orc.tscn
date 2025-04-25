@@ -1,0 +1,90 @@
+[gd_scene load_steps=12 format=3 uid="uid://cn7rxosx3efb6"]
+
+[ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/0x72_DungeonTilesetII_v1_3.png" id="1_q65bv"]
+[ext_resource type="Script" uid="uid://pl10jsxpy4cq" path="res://LittleOrc/little_orc.gd" id="1_yla00"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yla00"]
+radius = 12.0416
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yla00"]
+atlas = ExtResource("1_q65bv")
+region = Rect2(368, 192, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4xu7h"]
+atlas = ExtResource("1_q65bv")
+region = Rect2(384, 192, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2faon"]
+atlas = ExtResource("1_q65bv")
+region = Rect2(432, 192, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a77c6"]
+atlas = ExtResource("1_q65bv")
+region = Rect2(448, 192, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6elaw"]
+atlas = ExtResource("1_q65bv")
+region = Rect2(464, 192, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_epop4"]
+atlas = ExtResource("1_q65bv")
+region = Rect2(480, 192, 16, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2faon"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yla00")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4xu7h")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2faon")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a77c6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6elaw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_epop4")
+}],
+"loop": true,
+"name": &"Run",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4xu7h"]
+radius = 8.0
+
+[node name="LittleOrc" type="CharacterBody2D" groups=["enemy"]]
+collision_layer = 0
+script = ExtResource("1_yla00")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" groups=["enemy"]]
+position = Vector2(0, -12)
+shape = SubResource("CircleShape2D_yla00")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." groups=["enemy"]]
+position = Vector2(-1, -23)
+scale = Vector2(1.4375, 1.4375)
+sprite_frames = SubResource("SpriteFrames_2faon")
+animation = &"Idle"
+autoplay = "Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8)
+shape = SubResource("CircleShape2D_4xu7h")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

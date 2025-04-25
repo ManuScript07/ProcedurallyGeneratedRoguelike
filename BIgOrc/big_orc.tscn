@@ -1,0 +1,99 @@
+[gd_scene load_steps=13 format=3 uid="uid://cqbs7hqjh6c5e"]
+
+[ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/0x72_DungeonTilesetII_v1_3.png" id="1_r31ev"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l5dh8"]
+atlas = ExtResource("1_r31ev")
+region = Rect2(18, 320, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3iiqs"]
+atlas = ExtResource("1_r31ev")
+region = Rect2(50, 320, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l5t7c"]
+atlas = ExtResource("1_r31ev")
+region = Rect2(82, 320, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a0drb"]
+atlas = ExtResource("1_r31ev")
+region = Rect2(114, 320, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dmsgt"]
+atlas = ExtResource("1_r31ev")
+region = Rect2(146, 320, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sgcr2"]
+atlas = ExtResource("1_r31ev")
+region = Rect2(178, 320, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8e0eh"]
+atlas = ExtResource("1_r31ev")
+region = Rect2(210, 320, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y33mx"]
+atlas = ExtResource("1_r31ev")
+region = Rect2(242, 320, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4x8ji"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l5dh8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3iiqs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l5t7c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a0drb")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dmsgt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sgcr2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8e0eh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y33mx")
+}],
+"loop": true,
+"name": &"Run",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1ltgu"]
+radius = 18.0278
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_103ty"]
+radius = 31.0161
+
+[node name="BigOrc" type="CharacterBody2D"]
+collision_layer = 0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(4, -34.25)
+scale = Vector2(2.14063, 2.14063)
+sprite_frames = SubResource("SpriteFrames_4x8ji")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.797806
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -18)
+shape = SubResource("CircleShape2D_1ltgu")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(1, -31)
+shape = SubResource("CircleShape2D_103ty")
