@@ -1,7 +1,7 @@
 extends Node2D
 
 @onready var generated_map = $GeneratedMap
-@onready var player = $Node2D/Knight
+@onready var player = %Knight
 @onready var little_orc = preload("res://LittleOrc/little_orc.tscn")
 @onready var big_orc = preload("res://BIgOrc/big_orc.tscn")
 @onready var mini_demon = preload("res://miniDemon/mini_demon.tscn")
@@ -42,11 +42,12 @@ var max_enemies_per_room = 10
 var min_enemy_distance := 5
 var spawned_enemies := []
 
-
+#var back_layer
 
 
 
 func _ready():
+	#back_layer = get_tree().get_first_node_in_group("back_layer")
 	clear_debug()
 	generated_map.clear()
 	generate_map()
@@ -62,6 +63,8 @@ func _input(event):
 		clear_boxes()
 		generated_map.clear()
 		generate_map()
+		player.health_component.current_health = 10
+		player.health_update()
 
 
 func generate_map():
@@ -246,8 +249,8 @@ func place_room(room: Room):
 	
 	if room.room_size != Vector2i(11, 11):
 		add_inner_walls(room)
-		spawn_box(room)
 		spawn_torches_in_room(room)
+		spawn_box(room)
 	
 
 
@@ -414,9 +417,10 @@ func spawn_enemies_in_room(room: Room):
 
 		if enemy_instance:
 			enemy_instance.global_position = generated_map.map_to_local(cell)
-			add_child(enemy_instance)
+			var back_layer = get_tree().get_first_node_in_group("back_layer")
+			back_layer.add_child(enemy_instance)
 			
-			enemy_instance.connect("died", Callable(self, "_on_enemy_died").bind(room.enemies, room))
+			enemy_instance.health_component.connect("died", Callable(self, "_on_enemy_died").bind(room.enemies, room))
 
 			
 			spawned_enemies.append(enemy_instance)
@@ -477,7 +481,8 @@ func spawn_torches_in_room(room: Room):
 		var torch = TorchScene.instantiate()
 		torch.position = world_pos
 		torch.add_to_group("torches")
-		add_child(torch)
+		var back_layer = get_tree().get_first_node_in_group("back_layer")
+		back_layer.add_child(torch)
 		
 		used_positions.append(cell)
 		torch_count -= 1
@@ -491,8 +496,8 @@ func spawn_box(room):
 	for i in max_tries:
 		var cell = room.cells[rng.randi_range(0, room.cells.size() - 1)]
 		var tile_coords = generated_map.get_cell_atlas_coords(cell)
-
-		# Пропустить, если это стена (например, tile_id == wall_id)
+#
+		## Пропустить, если это стена (например, tile_id == wall_id)
 		if tile_coords == Constants.DUNGEON_WALL_ATLAS:
 			continue
 
@@ -509,7 +514,8 @@ func spawn_box(room):
 		if result.is_empty():
 			box.position = world_pos
 			box.add_to_group("boxes")
-			add_child(box)
+			var back_layer = get_tree().get_first_node_in_group("back_layer")
+			back_layer.add_child(box)
 			
 			room.box = box
 			return

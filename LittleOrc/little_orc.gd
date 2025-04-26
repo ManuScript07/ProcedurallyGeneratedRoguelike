@@ -2,14 +2,18 @@ extends CharacterBody2D
 
 var max_speed = 80
 
-signal died(enemy)
 
-func _process(_delta: float) -> void:
-	var direction = get_direction_to_player()
-	velocity = max_speed*direction
-	move_and_slide()
+@onready var health_component: Node = $HealthComponent
 
+func _ready() -> void:
+	health_component.connect("died", Callable(self, "on_died"))
 
+#func _process(_delta: float) -> void:
+	#var direction = get_direction_to_player()
+	#velocity = max_speed*direction
+	#move_and_slide()
+	
+	
 func get_direction_to_player():
 	var player = get_tree().get_first_node_in_group("Player") as Node2D
 	
@@ -25,8 +29,8 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	if tilemap != null and tilemap.is_wall_between(global_position, player.global_position):
 		return 
 
-	die()
+	health_component.take_damage(5)
 
-func die():
-	emit_signal("died", self)
+
+func on_died(enemy):
 	queue_free()

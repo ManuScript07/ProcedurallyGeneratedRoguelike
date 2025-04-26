@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://cn7rxosx3efb6"]
+[gd_scene load_steps=14 format=3 uid="uid://cn7rxosx3efb6"]
 
 [ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/0x72_DungeonTilesetII_v1_3.png" id="1_q65bv"]
 [ext_resource type="Script" uid="uid://pl10jsxpy4cq" path="res://LittleOrc/little_orc.gd" id="1_yla00"]
+[ext_resource type="PackedScene" uid="uid://hysq0em8pdlm" path="res://Components/health_component.tscn" id="2_4xu7h"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yla00"]
 radius = 12.0416
@@ -64,9 +65,15 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_4xu7h"]
 radius = 8.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_2faon"]
+
 [node name="LittleOrc" type="CharacterBody2D" groups=["enemy"]]
-collision_layer = 0
+z_as_relative = false
+collision_layer = 4
+collision_mask = 5
 script = ExtResource("1_yla00")
+
+[node name="HealthComponent" parent="." instance=ExtResource("2_4xu7h")]
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 0
@@ -84,7 +91,15 @@ animation = &"Idle"
 autoplay = "Idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -8)
+position = Vector2(0, -12)
 shape = SubResource("CircleShape2D_4xu7h")
+
+[node name="EnemyHitBox" type="Area2D" parent="."]
+collision_layer = 24
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyHitBox"]
+position = Vector2(0, -12)
+shape = SubResource("CircleShape2D_2faon")
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

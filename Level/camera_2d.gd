@@ -5,4 +5,5 @@ extends Camera2D
 
 
 func _process(delta: float) -> void:
-	global_position = player.global_position
+	if player != null:
+		global_position = player.global_position

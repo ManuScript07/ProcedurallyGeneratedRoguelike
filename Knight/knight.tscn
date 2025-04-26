@@ -1,9 +1,21 @@
-[gd_scene load_steps=31 format=3 uid="uid://deiq7xy1437hu"]
+[gd_scene load_steps=35 format=3 uid="uid://deiq7xy1437hu"]
 
 [ext_resource type="Script" uid="uid://k8mphhaicydw" path="res://Knight/knight.gd" id="1_f8xjr"]
 [ext_resource type="Texture2D" uid="uid://pqyjf58i4hy2" path="res://Assets/Knight.png" id="1_jaf5a"]
 [ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/0x72_DungeonTilesetII_v1_3.png" id="2_o60lg"]
+[ext_resource type="PackedScene" uid="uid://hysq0em8pdlm" path="res://Components/health_component.tscn" id="3_b8vh2"]
 [ext_resource type="Script" uid="uid://dnbj3ktfks871" path="res://Knight/AttackController.tres.gd" id="4_0qi7p"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b8vh2"]
+bg_color = Color(0.00784314, 0.133333, 0.243137, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2s81m"]
+bg_color = Color(0.579254, 1.97336e-06, 3.85046e-07, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.00626577, 0.135122, 0.243729, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_f8xjr"]
 atlas = ExtResource("1_jaf5a")
@@ -290,10 +302,14 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8xuu0"]
-size = Vector2(60, 76)
+size = Vector2(101, 76)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2s81m"]
+radius = 8.0
+height = 22.0
 
 [node name="Knight" type="CharacterBody2D" groups=["Player"]]
-z_index = 1
+z_as_relative = false
 collision_layer = 0
 script = ExtResource("1_f8xjr")
 
@@ -301,6 +317,25 @@ script = ExtResource("1_f8xjr")
 
 [node name="AttackController" type="Node" parent="AbilityManager"]
 script = ExtResource("4_0qi7p")
+
+[node name="HealthComponent" parent="." instance=ExtResource("3_b8vh2")]
+
+[node name="GracePeriod" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(24, 4)
+offset_left = -12.0
+offset_top = -40.0
+offset_right = 12.0
+offset_bottom = -36.0
+pivot_offset = Vector2(12, 2)
+theme_override_styles/background = SubResource("StyleBoxFlat_b8vh2")
+theme_override_styles/fill = SubResource("StyleBoxFlat_2s81m")
+max_value = 1.0
+value = 0.5
+show_percentage = false
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -24)
@@ -332,8 +367,20 @@ collision_layer = 4
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Attack/Area2D"]
-position = Vector2(22, 2)
+position = Vector2(1.5, 2)
 shape = SubResource("RectangleShape2D_8xuu0")
 disabled = true
 
+[node name="PlayerHurtBox" type="Area2D" parent="."]
+y_sort_enabled = true
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerHurtBox"]
+position = Vector2(0, -11)
+shape = SubResource("CapsuleShape2D_2s81m")
+
+[connection signal="timeout" from="GracePeriod" to="." method="_on_grace_period_timeout"]
 [connection signal="animation_finished" from="Attack/AnimationPlayer" to="AbilityManager/AttackController" method="_on_animation_player_animation_finished"]
+[connection signal="area_entered" from="PlayerHurtBox" to="." method="_on_player_hurt_box_area_entered"]
+[connection signal="area_exited" from="PlayerHurtBox" to="." method="_on_player_hurt_box_area_exited"]

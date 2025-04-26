@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dl5e4hx1sy4tx"]
+[gd_scene load_steps=11 format=3 uid="uid://dl5e4hx1sy4tx"]
 
 [ext_resource type="Script" uid="uid://d0lu78f7pwr2n" path="res://Level/level.gd" id="1_qmtf6"]
 [ext_resource type="PackedScene" uid="uid://dff0y0oein4a1" path="res://Box/box.tscn" id="2_d6qko"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bfkci7jhhnfuw" path="res://Assets/background/background_layer_2.png" id="5_d6qko"]
 [ext_resource type="Texture2D" uid="uid://d4dx68qki11p1" path="res://Assets/background/background_layer_3.png" id="6_22cqp"]
 [ext_resource type="Script" uid="uid://c134lb6agg0j4" path="res://Level/camera_2d.gd" id="9_wqlfs"]
+[ext_resource type="PackedScene" uid="uid://f8d4tb4cof3a" path="res://UI/ui.tscn" id="10_py82k"]
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_qmtf6")
@@ -47,11 +48,21 @@ position = Vector2(577.889, 324.5)
 scale = Vector2(3.60556, 3.60556)
 texture = ExtResource("6_22cqp")
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="Back" type="Node2D" parent="." groups=["back_layer"]]
+y_sort_enabled = true
 
-[node name="Knight" parent="Node2D" instance=ExtResource("3_uawph")]
+[node name="Knight" parent="Back" instance=ExtResource("3_uawph")]
 unique_name_in_owner = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(3.5, 3.5)
+position_smoothing_enabled = true
 script = ExtResource("9_wqlfs")
+
+[node name="UI" parent="Camera2D" instance=ExtResource("10_py82k")]
+offset_left = -570.0
+offset_top = -310.0
+offset_right = -570.0
+offset_bottom = -310.0
+
+[node name="Front" type="Node2D" parent="." groups=["front_layer"]]

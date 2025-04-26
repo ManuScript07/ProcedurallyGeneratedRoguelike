@@ -69,12 +69,13 @@ animations = [{
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2i58y"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2i58y"]
-size = Vector2(10, 18)
+size = Vector2(10, 10.5)
 
 [node name="Torch" type="Node2D"]
+z_as_relative = false
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(1.19209e-07, -13)
+position = Vector2(7.10543e-15, -11)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_a7kyu")
 animation = &"Idle"
@@ -85,5 +86,5 @@ frame_progress = 0.753089
 physics_material_override = SubResource("PhysicsMaterial_2i58y")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(0, -9)
+position = Vector2(0, -3.75)
 shape = SubResource("RectangleShape2D_2i58y")

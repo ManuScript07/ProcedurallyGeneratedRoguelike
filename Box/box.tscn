@@ -33,8 +33,11 @@ animations = [{
 }]
 
 [node name="Box" type="Node2D"]
+z_as_relative = false
 script = ExtResource("1_fvd0o")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+z_as_relative = false
+position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_akb4s")
 animation = &"Opening"
