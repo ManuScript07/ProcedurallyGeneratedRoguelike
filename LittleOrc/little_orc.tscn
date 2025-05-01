@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://cn7rxosx3efb6"]
 
-[ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/0x72_DungeonTilesetII_v1_3.png" id="1_q65bv"]
+[ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/__MACOSX/0x72_16x16DungeonTileset.v5/0x72_DungeonTilesetII_v1_3.png" id="1_q65bv"]
 [ext_resource type="Script" uid="uid://pl10jsxpy4cq" path="res://LittleOrc/little_orc.gd" id="1_yla00"]
 [ext_resource type="PackedScene" uid="uid://hysq0em8pdlm" path="res://Components/health_component.tscn" id="2_4xu7h"]
 
@@ -91,11 +91,11 @@ animation = &"Idle"
 autoplay = "Idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -12)
+position = Vector2(0, -8)
 shape = SubResource("CircleShape2D_4xu7h")
 
 [node name="EnemyHitBox" type="Area2D" parent="."]
-collision_layer = 24
+collision_layer = 8
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyHitBox"]

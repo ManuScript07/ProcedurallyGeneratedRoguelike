@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://bx2rl2yomaysv"]
 
-[ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/0x72_DungeonTilesetII_v1_3.png" id="1_lgqwx"]
+[ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/__MACOSX/0x72_16x16DungeonTileset.v5/0x72_DungeonTilesetII_v1_3.png" id="1_lgqwx"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_732w0"]
 atlas = ExtResource("1_lgqwx")

@@ -58,6 +58,7 @@ func _input(event):
 	if Input.is_action_just_pressed("generated_map"):
 		isFirstRoom = true
 		clear_debug()
+		clear_areas()
 		clear_spawned_enemies()
 		clear_torches()
 		clear_boxes()
@@ -101,12 +102,12 @@ func generate_exit(rooms: Array[Room]):
 	var max_distance := 0.0
 	
 	for room in rooms:
-		var distance := room.center.distance_to(entrance)
+		var distance = room.center.distance_to(entrance)
 		if distance > max_distance and room.connections <= 1:
 			max_distance = distance
 			farthest_room = room
 
-	var exit_tile := farthest_room.center
+	var exit_tile = farthest_room.center
 	draw_large_entry(exit_tile, Constants.DUNGEON_EXIT_ATLAS)
 	exit = exit_tile
 
@@ -148,6 +149,14 @@ func connect_rooms(graph: Array) -> Dictionary:
 			connected_room.connections += 1
 			var start = room.get_wall_center_towards(connected_room)
 			var end = connected_room.get_wall_center_towards(room)
+			
+			var direction_to_connected = (connected_room.center - room.center).sign()
+			var direction_to_room = -direction_to_connected
+
+			room.entrances.append_array(get_entrance_tiles(start, direction_to_connected, 5))
+			connected_room.entrances.append_array(get_entrance_tiles(end, direction_to_room, 5))
+
+			
 			var coridor_path = get_simple_path(start, end)
 
 			coridors[connection_key] = coridor_path
@@ -156,6 +165,19 @@ func connect_rooms(graph: Array) -> Dictionary:
 				place_coridor(point)
 
 	return coridors
+
+
+func get_entrance_tiles(start: Vector2i, direction: Vector2i, width: int = 3) -> Array:
+	var tiles := []
+	var offset = int(width / 2)
+	for i in range(-offset, offset + 1):
+		var pos = start
+		if direction.x == 0:
+			pos.x += i
+		else:
+			pos.y += i
+		tiles.append(pos)
+	return tiles
 
 
 func clear_spawned_enemies():
@@ -171,6 +193,11 @@ func clear_torches():
 func clear_boxes():
 	for box in get_tree().get_nodes_in_group("boxes"):
 		box.queue_free()
+		
+func clear_areas():
+	for room in rooms:
+		if (room.room_size.x != 11):
+			room.area_room.queue_free()
 
 func clear_debug():
 	for debug_node in debug_nodes:
@@ -193,7 +220,12 @@ func generate_random_room() -> Room:
 	if room_position == null:
 		return null
 	
-	return Room.new(room_size, room_position)
+	var room = Room.new(room_size, room_position)
+	if room_size.x != 11:
+		add_child(room.create_area_trigger())
+		room.connect("request_block_entrances", Callable(self, "_on_beginning_fight"))
+		room.connect("request_unblock_entrances", Callable(self, "_on_end_fight"))
+	return room
 
 
 func get_random_neighbour_position():
@@ -235,7 +267,7 @@ func can_place_room_at(position: Vector2i) -> bool:
 
 
 func place_room(room: Room):
-	var cell_set := room.cells.duplicate()
+	var cell_set = room.cells.duplicate()
 	for cell in room.cells:
 		generated_map.set_cell(cell, 0, Vector2i(rng.randi_range(0, 3), rng.randi_range(6, 8)), DUNGEON_CELL_ID)
 		for offset in [
@@ -440,8 +472,7 @@ func _on_enemy_died(enemy, room_enemies: Array, room: Room):
 		spawned_enemies.erase(enemy)
 
 	if room_enemies.is_empty():
-		if room.box:
-			room.open_chest()
+		room.emit_signal("request_unblock_entrances", room)
 	
 
 func get_random_enemy_type_by_weight() -> String:
@@ -510,7 +541,6 @@ func spawn_box(room):
 
 		var result = get_world_2d().direct_space_state.intersect_point(query, 1)
 		
-		# Проверяем, что точка свободна (без тел и факелов)
 		if result.is_empty():
 			box.position = world_pos
 			box.add_to_group("boxes")
@@ -521,115 +551,16 @@ func spawn_box(room):
 			return
 
 	
+func _on_beginning_fight(room: Room):
+	for entrance in room.entrances:
+		generated_map.set_cell(entrance, LAYER, Constants.DUNGEON_WALL_ATLAS, DUNGEON_CELL_ID)
+	
+	for enemy in room.enemies:
+			enemy.active = true
 
-
-class AdjucencyMatrixGraph:
-	
-	static func get_delaunay_edges(vertexes: PackedVector2Array) -> PackedInt32Array:
-		return Geometry2D.triangulate_delaunay(vertexes)
-	
-	static func get_empty_adjucency_matrix(vertexes: PackedVector2Array) -> Array:
-		var adjucency_matrix = range(vertexes.size())
-		for i in adjucency_matrix:
-			adjucency_matrix[i] = range(vertexes.size()).map(func (i): return 0)
-		
-		return adjucency_matrix
-	
-	static func get_weighted_adjucency_matrix(vertexes: PackedVector2Array, delaunay_edges: PackedInt32Array):
-		var adjucency_matrix = get_empty_adjucency_matrix(vertexes)
-		
-		for i in range(delaunay_edges.size() / 3):
-			var index = i * 3
-
-			var first = delaunay_edges[index]
-			var second = delaunay_edges[index + 1]
-			var third = delaunay_edges[index + 2]
-			
-			adjucency_matrix[first][second] = vertexes[first].distance_squared_to(vertexes[second])
-			adjucency_matrix[first][third] = vertexes[first].distance_squared_to(vertexes[third])
-			
-			adjucency_matrix[second][first] = vertexes[second].distance_squared_to(vertexes[first])
-			adjucency_matrix[second][third] = vertexes[second].distance_squared_to(vertexes[third])
-			
-			adjucency_matrix[third][first] = vertexes[third].distance_squared_to(vertexes[first])
-			adjucency_matrix[third][second] = vertexes[third].distance_squared_to(vertexes[second])
-		
-		return adjucency_matrix
-	
-	
-	# Prims Algorithm 
-	static func get_minimum_spanning_tree(rng: RandomNumberGenerator, vertexes: PackedVector2Array, weighted_adjucency_matrix: Array) -> Array:
-		var minimum_spanning_tree = get_empty_adjucency_matrix(vertexes)
-		var fringe_vertexes = range(vertexes.size())
-		var opened_vertexes = []
-		
-		var first_vertex = rng.randi_range(0, minimum_spanning_tree.size() - 1)
-		fringe_vertexes.erase(first_vertex)
-		opened_vertexes.append(first_vertex)
-		
-		while fringe_vertexes.size() > 0:
-			var best_edge
-			
-			for opened_vertex in opened_vertexes:
-				var opened_vertex_edges : Array = weighted_adjucency_matrix[opened_vertex]
-				for vertex_index in range(opened_vertex_edges.size()):
-					var vertex_weight = opened_vertex_edges[vertex_index]
-					if vertex_weight == 0 or not fringe_vertexes.has(vertex_index):
-						continue
-						
-					if best_edge == null or vertex_weight < best_edge.weight:
-						best_edge = {
-							"opened": opened_vertex,
-							"fringe": vertex_index,
-							"weight": vertex_weight
-						}
-						
-			if best_edge == null:
-				break
-			
-			fringe_vertexes.erase(best_edge.fringe)
-			opened_vertexes.append(best_edge.fringe)
-			
-			minimum_spanning_tree[best_edge.opened][best_edge.fringe] = 1
-			minimum_spanning_tree[best_edge.fringe][best_edge.opened] = 1
-		
-		return minimum_spanning_tree
-
-
-class Room:
-	var room_size: Vector2i
-	var room_position: Vector2i
-	var cells: Array[Vector2i]
-	var center: Vector2i
-	var connections: int = 0
-	var enemies: Array[Node] = []
-	var box: Node2D = null
-	func _init(_room_size: Vector2i, _room_position: Vector2i):
-		room_size = _room_size
-		room_position = _room_position
-		center = _room_position
-		for x in range(room_size.x):
-			for y in range(room_size.y):
-				cells.append(room_position + Vector2i(x, y))
-	
-	
-	func get_wall_center_towards(other: Room) -> Vector2i:
-		var delta = other.center - center
-		
-		if abs(delta.x) > abs(delta.y):
-			var y = room_position.y + int(room_size.y / 2)
-			if delta.x > 0:
-				return Vector2i(room_position.x + room_size.x-1, y)
-			else:
-				return Vector2i(room_position.x, y)
-		else:
-			var x = room_position.x + int(room_size.x / 2)
-			if delta.y > 0:
-				return Vector2i(x, room_position.y + room_size.y-1)
-			else:
-				return Vector2i(x, room_position.y)
-	
-	func open_chest():
-		if box:
-			box.open_chest()
-		
+func _on_end_fight(room: Room):
+	player.max_speed = 200
+	if room.box:
+			room.box.open_chest()
+	for entrance in room.entrances:
+		generated_map.set_cell(entrance, LAYER, Vector2i(rng.randi_range(0, 3), rng.randi_range(6, 8)), DUNGEON_CELL_ID)

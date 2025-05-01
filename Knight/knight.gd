@@ -11,6 +11,7 @@ var max_speed = 200
 var enemies_colliding = 0
 var last_direction_x = 1 
 
+var current_room: Room = null
 
 func _ready() -> void:
 	health_component.connect("died", Callable(self, "on_died"))
@@ -67,3 +68,13 @@ func on_died(enemy):
 
 func _on_grace_period_timeout() -> void:
 	check_if_damage()
+
+
+
+
+func _on_player_pos_area_area_entered(area: Area2D) -> void:
+	var room = area.get_meta("room_ref")
+	current_room = room
+	if !room.enemies.is_empty():
+		max_speed = 150
+		room.emit_signal("request_block_entrances", room)

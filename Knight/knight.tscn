@@ -1,8 +1,8 @@
-[gd_scene load_steps=35 format=3 uid="uid://deiq7xy1437hu"]
+[gd_scene load_steps=36 format=3 uid="uid://deiq7xy1437hu"]
 
 [ext_resource type="Script" uid="uid://k8mphhaicydw" path="res://Knight/knight.gd" id="1_f8xjr"]
 [ext_resource type="Texture2D" uid="uid://pqyjf58i4hy2" path="res://Assets/Knight.png" id="1_jaf5a"]
-[ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/0x72_DungeonTilesetII_v1_3.png" id="2_o60lg"]
+[ext_resource type="Texture2D" uid="uid://cl1saacimqenw" path="res://Assets/__MACOSX/0x72_16x16DungeonTileset.v5/0x72_DungeonTilesetII_v1_3.png" id="2_o60lg"]
 [ext_resource type="PackedScene" uid="uid://hysq0em8pdlm" path="res://Components/health_component.tscn" id="3_b8vh2"]
 [ext_resource type="Script" uid="uid://dnbj3ktfks871" path="res://Knight/AttackController.tres.gd" id="4_0qi7p"]
 
@@ -172,6 +172,9 @@ radius = 8.0
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0qi7p"]
 load_path = "res://.godot/imported/weapon_silver_topaz.png-2966878532ffd8ae92d466f0e87c6b58.ctex"
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8xuu0"]
+size = Vector2(18, 36)
+
 [sub_resource type="Animation" id="Animation_dbbpo"]
 length = 0.001
 tracks/0/type = "value"
@@ -201,26 +204,38 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("../Area2D/CollisionShape2D:disabled")
+tracks/2/path = NodePath(".:offset")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
+"update": 0,
+"values": [Vector2(0, -20)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath(".:offset")
+tracks/3/path = NodePath("../Area2D:rotation")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, -20)]
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../Area2D/CollisionShape2D:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
 }
 
 [sub_resource type="Animation" id="Animation_ccaat"]
@@ -254,13 +269,25 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("../Area2D/CollisionShape2D:disabled")
+tracks/2/path = NodePath("../Area2D:rotation")
 tracks/2/interp = 2
 tracks/2/loop_wrap = true
 tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(0.707, 0.148, 0.683, 0.965),
+"update": 0,
+"values": [0.0, -0.523599, 3.14159, 0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../Area2D/CollisionShape2D:disabled")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
 "times": PackedFloat32Array(0, 0.1, 0.4),
 "transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
+"update": 0,
 "values": [true, false, true]
 }
 
@@ -281,18 +308,6 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector2(0, -16), Vector2(0, -24), Vector2(0, -16)]
 }
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../Area2D/CollisionShape2D:disabled")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_a5adi"]
 _data = {
@@ -301,12 +316,11 @@ _data = {
 &"idle": SubResource("Animation_0qi7p")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_8xuu0"]
-size = Vector2(101, 76)
-
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2s81m"]
 radius = 8.0
 height = 22.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b8vh2"]
 
 [node name="Knight" type="CharacterBody2D" groups=["Player"]]
 z_as_relative = false
@@ -356,20 +370,21 @@ scale = Vector2(0.9, 0.9)
 texture = SubResource("CompressedTexture2D_0qi7p")
 offset = Vector2(0, -20)
 
+[node name="Area2D" type="Area2D" parent="Attack"]
+position = Vector2(14, 0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Attack/Area2D"]
+position = Vector2(0, -18)
+shape = SubResource("RectangleShape2D_8xuu0")
+disabled = true
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Attack"]
 root_node = NodePath("../Sprite2D")
 libraries = {
 &"": SubResource("AnimationLibrary_a5adi")
 }
-
-[node name="Area2D" type="Area2D" parent="Attack"]
-collision_layer = 4
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Attack/Area2D"]
-position = Vector2(1.5, 2)
-shape = SubResource("RectangleShape2D_8xuu0")
-disabled = true
 
 [node name="PlayerHurtBox" type="Area2D" parent="."]
 y_sort_enabled = true
@@ -380,7 +395,15 @@ collision_mask = 8
 position = Vector2(0, -11)
 shape = SubResource("CapsuleShape2D_2s81m")
 
+[node name="PlayerPosArea" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerPosArea"]
+position = Vector2(0, -11)
+shape = SubResource("CapsuleShape2D_b8vh2")
+
 [connection signal="timeout" from="GracePeriod" to="." method="_on_grace_period_timeout"]
 [connection signal="animation_finished" from="Attack/AnimationPlayer" to="AbilityManager/AttackController" method="_on_animation_player_animation_finished"]
 [connection signal="area_entered" from="PlayerHurtBox" to="." method="_on_player_hurt_box_area_entered"]
 [connection signal="area_exited" from="PlayerHurtBox" to="." method="_on_player_hurt_box_area_exited"]
+[connection signal="area_entered" from="PlayerPosArea" to="." method="_on_player_pos_area_area_entered"]
