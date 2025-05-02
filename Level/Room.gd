@@ -60,8 +60,8 @@ func create_area_trigger():
 	area.position = offset * tile_size  
 	area.name = "RoomArea"
 	area.set_meta("room_ref", self)
-	area.set_collision_layer_value(2, true)
-	area.set_collision_mask_value(1, true)
+	area.set_collision_layer_value(1, true)
+	area.set_collision_mask_value(2, true)
 
 	area_room = area
 	return area
